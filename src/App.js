@@ -17,17 +17,9 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
+
 import Onboarding from "./Onboarding"
 
-const steps = [{
-    selector: '[data-onboarding-step="1"]',
-    title: "Title step 1",
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-  }, {
-    selector: '[data-onboarding-step="2"]',
-    title: "Title step 2",
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-}]
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -63,12 +55,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const steps = [{
+    selector: '[data-onboarding-step="1"]',
+    title: "Title step 1",
+    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  }, {
+    selector: '[data-onboarding-step="2"]',
+    title: "Title step 2",
+    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  }, {
+    selector: '[data-onboarding-step="3"]',
+    title: "Title step 3",
+    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+  }
+]
+
 function Dashboard(props) {
   const { window } = props;
   const classes = useStyles();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [onboardingOpen, setOnboardingOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -79,12 +86,30 @@ function Dashboard(props) {
       <div className={classes.toolbar} />
       <Divider />
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
+          <ListItem button>
+            <ListItemIcon>
+              <InboxIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Inbox"} />
           </ListItem>
-        ))}
+          <ListItem button>
+            <ListItemIcon>
+              <MailIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Starred"} />
+          </ListItem>
+          <ListItem button>
+            <ListItemIcon>
+              <InboxIcon />
+            </ListItemIcon>
+            <ListItemText primary={<span data-onboarding-step="3">Send email</span>}  />
+          </ListItem>
+          <ListItem button>
+            <ListItemIcon>
+              <MailIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Drafts"} />
+          </ListItem>
       </List>
       <Divider />
       <List>
@@ -102,7 +127,7 @@ function Dashboard(props) {
 
   return (
     <div className={classes.root}>
-      <Onboarding open={open} steps={steps} onCompleted={() => setOpen(false)} />
+      <Onboarding open={onboardingOpen} steps={steps} onCompleted={() => setOnboardingOpen(false)} />
       <CssBaseline /> 
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
@@ -153,8 +178,8 @@ function Dashboard(props) {
       </nav>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <div>
-            <Button ariant="outlined" color="primary" data-onboarding-step="1">Action</Button>
+            <Button ariant="outlined" color="primary" data-onboarding-step="1" onClick={() => setOnboardingOpen(true)}>Start onboarding</Button>
+        <div style={{paddingTop: 32}}>
             <Typography paragraph>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
           ut labore et dolore magna aliqua. Rhoncus dolor purus non enim praesent elementum
@@ -179,17 +204,6 @@ function Dashboard(props) {
           imperdiet massa tincidunt. Cras tincidunt lobortis feugiat vivamus at augue. At augue eget
           arcu dictum varius duis at consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem
           donec massa sapien faucibus et molestie ac.
-        </Typography>
-        <Typography paragraph>
-          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper eget nulla
-          facilisi etiam dignissim diam. Pulvinar elementum integer enim neque volutpat ac
-          tincidunt. Ornare suspendisse sed nisi lacus sed viverra tellus. Purus sit amet volutpat
-          consequat mauris. Elementum eu facilisis sed odio morbi. Euismod lacinia at quis risus sed
-          vulputate odio. Morbi tincidunt ornare massa eget egestas purus viverra accumsan in. In
-          hendrerit gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem et
-          tortor. Habitant morbi tristique senectus et. Adipiscing elit duis tristique sollicitudin
-          nibh sit. Ornare aenean euismod elementum nisi quis eleifend. Commodo viverra maecenas
-          accumsan lacus vel facilisis. Nulla posuere sollicitudin aliquam ultrices sagittis orci a.
         </Typography>
         <div>
             <Button variant="outlined" color="primary" data-onboarding-step="2">Another action</Button>

@@ -47,38 +47,37 @@ const Onboarding = ({ open, steps, onCompleted }) => {
             disableBodyScroll(window)
         } else {
             enableBodyScroll(window)
-            setCurrentStepNumber(0)
         }
     }, [open])
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         async function loadNext() {
-            const step = steps[currentStepNumber]
-            if(step.onBefore) {
-                await step.onBefore()
-            }
             setMoving(true)
+            const step = steps[currentStepNumber]
 
             await scrollIntoView(step.selector)
             setPosition(getCoords(step.selector))
 
             setMoving(false) 
         } 
-        loadNext()
-    }, [currentStepNumber, steps])
+        if(open) loadNext()
+    }, [currentStepNumber, steps, open])
 
 
     const next = useCallback(async(stepNumber) => {
         const step = steps[currentStepNumber]
         if(step.onAfter) {
+            setMoving(true)
             await step.onAfter()
+            setMoving(false)
         }
         if(isCompleted(steps, stepNumber)) {
             onCompleted()
+            setCurrentStepNumber(0)
         } else {
             setCurrentStepNumber(stepNumber)
         }
-    }, [steps, onCompleted])
+    }, [steps, onCompleted, currentStepNumber])
 
     const resizeDebounced = useDebouncedCallback(() =>{ 
         if(open && !isMoving) {
