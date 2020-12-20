@@ -45,9 +45,9 @@ const Onboarding = ({ open, steps, onCompleted }) => {
     useEffect(() => {
         if(open) {
             disableBodyScroll(window)
-            setCurrentStepNumber(0)
         } else {
             enableBodyScroll(window)
+            setCurrentStepNumber(0)
         }
     }, [open])
 
@@ -125,7 +125,7 @@ const Onboarding = ({ open, steps, onCompleted }) => {
                                     <div>
                                         {steps.map((_, index) => <Dot key={index} actived={index === currentStepNumber} onClick={() => next(index)} />)}
                                     </div>
-                                    <Button focusRipple={false} data-autofocus onClick={() =>next(currentStepNumber + 1)}>Next</Button>
+                                    <Button focusRipple={false} data-autofocus onClick={() =>next(currentStepNumber + 1)}>{currentStepNumber === steps.length - 1 ? "Finish" : "Next" }</Button>
                                 </div>
                             </MoveFocusInside>
                         </Popover>
