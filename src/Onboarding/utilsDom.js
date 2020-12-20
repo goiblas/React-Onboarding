@@ -1,6 +1,6 @@
 import scrollIntoViewIfNeeded from 'smooth-scroll-into-view-if-needed';
 
-export function getCoords(selector, { gap = 20, position = "right" } = {}) {
+export function getCoords(selector, { gap = 32, position = "right" } = {}) {
     const element = document.querySelector(selector)
     const coordinates = element.getBoundingClientRect()
 

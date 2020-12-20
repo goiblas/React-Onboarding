@@ -1,7 +1,7 @@
 import { getCoords } from "./../utilsDom"
 
 describe('getCoords', () => {
-    const DEFAULT_GAP = 20;
+    const DEFAULT_GAP = 32;
     const element = { top: 100, left: 200, right: 350, bottom: 150, height: 50, width: 150 }
 
     beforeEach(() => {
