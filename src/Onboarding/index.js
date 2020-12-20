@@ -45,6 +45,9 @@ const Onboarding = ({ open, steps, onCompleted }) => {
     useLayoutEffect(() => {
         async function loadNext() {
             const step = steps[currentStepNumber]
+            if(step.onBefore) {
+                await step.onBefore()
+            }
             setMoving(true)
 
             await scrollIntoView(step.selector)
@@ -56,7 +59,11 @@ const Onboarding = ({ open, steps, onCompleted }) => {
     }, [currentStepNumber, steps])
 
 
-    const next = useCallback((stepNumber) => {
+    const next = useCallback(async(stepNumber) => {
+        const step = steps[currentStepNumber]
+        if(step.onAfter) {
+            await step.onAfter()
+        }
         if(isCompleted(steps, stepNumber)) {
             enableBodyScroll(window)
             onCompleted()
