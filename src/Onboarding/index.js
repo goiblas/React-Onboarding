@@ -42,6 +42,15 @@ const Onboarding = ({ open, steps, onCompleted }) => {
 
     const isCompleted = (arr, position) => !arr[position];
 
+    useEffect(() => {
+        if(open) {
+            disableBodyScroll(window)
+            setCurrentStepNumber(0)
+        } else {
+            enableBodyScroll(window)
+        }
+    }, [open])
+
     useLayoutEffect(() => {
         async function loadNext() {
             const step = steps[currentStepNumber]
@@ -65,9 +74,7 @@ const Onboarding = ({ open, steps, onCompleted }) => {
             await step.onAfter()
         }
         if(isCompleted(steps, stepNumber)) {
-            enableBodyScroll(window)
             onCompleted()
-            setCurrentStepNumber(0)
         } else {
             setCurrentStepNumber(stepNumber)
         }
@@ -87,8 +94,6 @@ const Onboarding = ({ open, steps, onCompleted }) => {
     }, 200)
 
     useEffect(() => {
-        disableBodyScroll(window)
-
         window.addEventListener("resize", resizeDebounced.callback)
         
         return () => {
