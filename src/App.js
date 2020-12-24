@@ -57,11 +57,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Dashboard(props) {
-  const { window, width } = props;
+  const { width } = props;
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [onboardingOpen, setOnboardingOpen] = React.useState(false);
+  const [onboardingOpen, setOnboardingOpen] = React.useState(true);
 
   const isNarrow = () => width === "xs";
 
@@ -69,7 +69,7 @@ function Dashboard(props) {
     selector: '[data-onboarding-step="1"]',
     title: "Title step 1",
     content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    }, {
+  }, {
       selector: '[data-onboarding-step="2"]',
       title: "Title step 2",
       content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -151,7 +151,6 @@ function Dashboard(props) {
     </div>
   );
 
-  const container = window !== undefined ? () => window().document.body : undefined;
 
   return (
     <div className={classes.root}>
@@ -178,7 +177,6 @@ function Dashboard(props) {
         <Hidden smUp implementation="css">
           <Drawer
             data-no-focus-lock
-            container={container}
             variant="temporary"
             anchor={theme.direction === 'rtl' ? 'right' : 'left'}
             open={mobileOpen}
@@ -207,8 +205,8 @@ function Dashboard(props) {
       </nav>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-            <Button ariant="outlined" color="primary" data-onboarding-step="1" onClick={() => setOnboardingOpen(true)}>Start onboarding</Button>
         <div style={{paddingTop: 32}}>
+            <Button ariant="outlined" color="primary" data-onboarding-step="1" onClick={() => setOnboardingOpen(true)}>Restart onboarding</Button>
             <Typography paragraph>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
           ut labore et dolore magna aliqua. Rhoncus dolor purus non enim praesent elementum
