@@ -42,14 +42,14 @@ const Onboarding = ({ open, steps, onCompleted }) => {
 
     const isCompleted = (arr, position) => !arr[position];
 
-    const setCurrent = newPosition => _setCurrent( lastPosition => {
+    const setCurrent = useCallback( newPosition => _setCurrent( lastPosition => {
         const step = steps[lastPosition]
         if(step.onAfter) {
             setMoving(true)
             step.onAfter().then(() => setMoving(false))
         }
         return newPosition
-    })
+    }), [steps])
 
     useEffect(() => {
         if(open) {
@@ -58,6 +58,7 @@ const Onboarding = ({ open, steps, onCompleted }) => {
             enableScroll()
         }
     }, [open])
+
     useEffect(() => {
         async function loadNext() {
             setMoving(true)
@@ -80,7 +81,7 @@ const Onboarding = ({ open, steps, onCompleted }) => {
         } else {
             setCurrent(stepNumber)
         }
-    }, [steps, onCompleted])
+    }, [steps, setCurrent, onCompleted])
 
     const resizeDebounced = useDebouncedCallback(() =>{ 
         if(open && !isMoving) {
