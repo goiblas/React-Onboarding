@@ -3,13 +3,31 @@ import { screen, render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Onboarding from "./../index"
 import * as utilsDom from "../utilsDom"
+import * as scrollLock from "../scrollLock"
 
 describe('onBoarding', () => {
     beforeEach(() => {
         jest.restoreAllMocks()
+        jest.spyOn(scrollLock, 'enableScroll').mockReturnValue({x: 0, y: 0})
+        jest.spyOn(scrollLock, 'disableScroll').mockReturnValue({x: 0, y: 0})
         jest.spyOn(utilsDom, 'getCoords').mockReturnValue({x: 0, y: 0})
         jest.spyOn(utilsDom, 'scrollIntoView').mockResolvedValue(undefined)
     });
+
+    test('Should disable scroll when it is opened', async () => {
+        const steps = [{
+            selector: ".selector",
+            title: "Title 1",
+            content: "content 1"
+        }]
+        const { rerender  } = render(<Onboarding open={true} steps={steps} onCompleted={jest.fn()} />)
+        expect( await screen.findByText("Title 1") ).toBeInTheDocument()
+        expect(scrollLock.disableScroll).toHaveBeenCalled();
+        
+        rerender(<Onboarding open={false} steps={steps} onCompleted={jest.fn()} />)
+        expect(scrollLock.enableScroll).toHaveBeenCalled();
+    })
+
     test('Should show the steps and be able to navigate them', async() => {
        
         const mockOnBefore = jest.fn(() => Promise.resolve())

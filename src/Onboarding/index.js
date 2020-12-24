@@ -2,8 +2,8 @@ import React, { useState, useCallback, useRef, useEffect } from "react"
 import FocusLock, { MoveFocusInside } from 'react-focus-lock'
 import { Backdrop, Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
 import { useDebouncedCallback } from 'use-debounce'
+import { enableScroll, disableScroll } from "./scrollLock"
 import Portal from "./Portal"
 import Badge from "./Badge"
 import { getCoords, scrollIntoView } from "./utilsDom"
@@ -53,12 +53,11 @@ const Onboarding = ({ open, steps, onCompleted }) => {
 
     useEffect(() => {
         if(open) {
-            disableBodyScroll(window)
+            disableScroll()
         } else {
-            enableBodyScroll(window)
+            enableScroll()
         }
     }, [open])
-
     useEffect(() => {
         async function loadNext() {
             setMoving(true)
