@@ -17,6 +17,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
+import withWidth from '@material-ui/core/withWidth';
 
 import Onboarding from "./Onboarding"
 
@@ -55,33 +56,54 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const steps = [{
-    selector: '[data-onboarding-step="1"]',
-    title: "Title step 1",
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    onBefore: async () => console.log("step 1: Before"),
-    onAfter: async () => console.log("step 1: After")
-  }, {
-    selector: '[data-onboarding-step="2"]',
-    title: "Title step 2",
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    onBefore: async () => console.log("step 2: Before"),
-    onAfter: async () => console.log("step 2: After")
-  }, {
-    selector: '[data-onboarding-step="3"]',
-    title: "Title step 3",
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    onBefore: async () => console.log("step 3: Before"),
-    onAfter: async () => console.log("step 3: After")
-  }
-]
-
 function Dashboard(props) {
-  const { window } = props;
+  const { window, width } = props;
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [onboardingOpen, setOnboardingOpen] = React.useState(false);
+
+  const isNarrow = () => width === "xs";
+
+  const steps = [{
+    selector: '[data-onboarding-step="1"]',
+    title: "Title step 1",
+    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    }, {
+      selector: '[data-onboarding-step="2"]',
+      title: "Title step 2",
+      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      placement: "left"
+    }, {
+      selector: isNarrow() ? '.MuiDrawer-modal [data-onboarding-step="3"]' : '[data-onboarding-step="3"]',
+      title: "Title step 3",
+      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      onBefore: () => {
+        return new Promise(resolve => {
+          if(isNarrow()) {
+            setMobileOpen(true)
+            setTimeout(() => {
+                resolve()
+            }, 200);
+          } else {
+            resolve()
+          }
+      })
+      },
+      onAfter: () => {
+        return new Promise(resolve => {
+          if(isNarrow()) {
+            setMobileOpen(false)
+            setTimeout(() => {
+                resolve()
+            }, 200);
+          } else {
+            resolve()
+          }
+        })
+      }
+    }
+  ]
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -211,7 +233,7 @@ function Dashboard(props) {
           arcu dictum varius duis at consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem
           donec massa sapien faucibus et molestie ac.
         </Typography>
-        <div>
+        <div style={{textAlign: "right"}}>
             <Button variant="outlined" color="primary" data-onboarding-step="2">Another action</Button>
         </div>
         
@@ -228,4 +250,4 @@ Dashboard.propTypes = {
   window: PropTypes.func,
 };
 
-export default Dashboard;
+export default withWidth()(Dashboard);

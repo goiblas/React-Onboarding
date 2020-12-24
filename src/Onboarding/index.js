@@ -12,13 +12,13 @@ import Dot from "./Dot"
 
 const useStyles = makeStyles((theme) => ({
     backdrop: {
-      zIndex: theme.zIndex.drawer + 1,
+      zIndex: theme.zIndex.modal + 1,
     },
     navigation: {
         display: "flex",
         justifyContent: "space-between"
     }
-  }));
+}));
 
 const createAnchorEl = ({ x, y }) => ({
     clientWidth: 0,
@@ -67,7 +67,7 @@ const Onboarding = ({ open, steps, onCompleted }) => {
                await step.onBefore()
             }
             await scrollIntoView(step.selector)
-            setPosition(getCoords(step.selector))
+            setPosition(getCoords(step.selector, { position: step.placement}))
 
             setMoving(false) 
         } 
@@ -90,7 +90,7 @@ const Onboarding = ({ open, steps, onCompleted }) => {
             setMoving(true)
     
             scrollIntoView(step.selector).then(() => {
-                setPosition(getCoords(step.selector))
+                setPosition(getCoords(step.selector, { position: step.placement}))
                 setMoving(false) 
             })
         }
