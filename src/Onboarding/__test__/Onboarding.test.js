@@ -8,8 +8,10 @@ import * as scrollLock from "../scrollLock"
 describe('onBoarding', () => {
     beforeEach(() => {
         jest.restoreAllMocks()
+        
         jest.spyOn(scrollLock, 'enableScroll').mockReturnValue({x: 0, y: 0})
         jest.spyOn(scrollLock, 'disableScroll').mockReturnValue({x: 0, y: 0})
+
         jest.spyOn(utilsDom, 'getCoords').mockReturnValue({x: 0, y: 0})
         jest.spyOn(utilsDom, 'scrollIntoView').mockResolvedValue(undefined)
     });
@@ -26,6 +28,31 @@ describe('onBoarding', () => {
         
         rerender(<Onboarding open={false} steps={steps} onCompleted={jest.fn()} />)
         expect(scrollLock.enableScroll).toHaveBeenCalled();
+    })
+
+    test('Should be able to navigate using the dots', async () => {
+        const steps = [{
+            title: "Title 1",
+            selector: "",
+            content: ""
+        }, {
+            title: "Title 2",
+            selector: "",
+            content: ""
+        }, {
+            title: "Title 3",
+            selector: "",
+            content: ""
+        }]
+        
+        render(<Onboarding open={true} steps={steps} onCompleted={jest.fn()} />)
+        expect( await screen.findByText("Title 1") ).toBeInTheDocument()
+        
+        userEvent.click(screen.getByRole('button', { name: '3' }))
+        expect( await screen.findByText("Title 3") ).toBeInTheDocument()
+
+        userEvent.click(screen.getByRole('button', { name: '2' }))
+        expect( await screen.findByText("Title 2") ).toBeInTheDocument()
     })
 
     test('Should show the steps and be able to navigate them', async() => {

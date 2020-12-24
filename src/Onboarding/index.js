@@ -126,7 +126,7 @@ const Onboarding = ({ open, steps, onCompleted }) => {
                                 <div className={classes.navigation}>
                                     <Button focusRipple={false} disabled={current === 0} onClick={() =>next(current - 1)}>Previus</Button>
                                     <div>
-                                        {steps.map((_, index) => <Dot key={index} actived={index === current} onClick={() => next(index)} />)}
+                                        {steps.map((_, index) => <Dot key={index} label={index + 1} actived={index === current} onClick={() => next(index)} />)}
                                     </div>
                                     <Button focusRipple={false} data-autofocus onClick={() =>next(current + 1)}>{current === steps.length - 1 ? "Finish" : "Next" }</Button>
                                 </div>

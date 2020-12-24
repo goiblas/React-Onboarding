@@ -22,9 +22,9 @@ const useStyles = makeStyles(theme => ({
     }
 ))
 
-const Dot = ({ actived, onClick }) => {
+const Dot = ({ actived, onClick, label }) => {
     const classes = useStyles({actived});
-    return <button className={classes.button} onClick={onClick}><span className={classes.dot}></span></button>
+    return <button aria-label={label} className={classes.button} onClick={onClick}><span className={classes.dot}></span></button>
 }
 
 export default Dot
