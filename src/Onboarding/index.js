@@ -35,12 +35,21 @@ const createAnchorEl = ({ x, y }) => ({
 
 const Onboarding = ({ open, steps, onCompleted }) => {
     const classes = useStyles();
-    const [currentStepNumber, setCurrentStepNumber] = useState(0)
+    const [current, _setCurrent] = useState(0)
     const [position, setPosition] = useState(null)
     const [isMoving, setMoving] = useState(false)
     const popperRef = useRef()
 
     const isCompleted = (arr, position) => !arr[position];
+
+    const setCurrent = newPosition => _setCurrent( lastPosition => {
+        const step = steps[lastPosition]
+        if(step.onAfter) {
+            setMoving(true)
+            step.onAfter().then(() => setMoving(false))
+        }
+        return newPosition
+    })
 
     useEffect(() => {
         if(open) {
@@ -53,35 +62,30 @@ const Onboarding = ({ open, steps, onCompleted }) => {
     useEffect(() => {
         async function loadNext() {
             setMoving(true)
-            const step = steps[currentStepNumber]
-
+            const step = steps[current]
+            if(step.onBefore) {
+               await step.onBefore()
+            }
             await scrollIntoView(step.selector)
             setPosition(getCoords(step.selector))
 
             setMoving(false) 
         } 
         if(open) loadNext()
-    }, [currentStepNumber, steps, open])
+    }, [current, steps, open])
 
-
-    const next = useCallback(async(stepNumber) => {
-        const step = steps[currentStepNumber]
-        if(step.onAfter) {
-            setMoving(true)
-            await step.onAfter()
-            setMoving(false)
-        }
+    const next = useCallback((stepNumber) => {
         if(isCompleted(steps, stepNumber)) {
             onCompleted()
-            setCurrentStepNumber(0)
+            setCurrent(0)
         } else {
-            setCurrentStepNumber(stepNumber)
+            setCurrent(stepNumber)
         }
-    }, [steps, onCompleted, currentStepNumber])
+    }, [steps, onCompleted])
 
     const resizeDebounced = useDebouncedCallback(() =>{ 
         if(open && !isMoving) {
-            const step = steps[currentStepNumber]
+            const step = steps[current]
             
             setMoving(true)
     
@@ -116,15 +120,15 @@ const Onboarding = ({ open, steps, onCompleted }) => {
                         <Popover
                             ref={popperRef}
                             anchorEl={createAnchorEl(position)}>
-                            <h2>{steps[currentStepNumber].title}</h2>
-                            <p>{steps[currentStepNumber].content}</p>
+                            <h2>{steps[current].title}</h2>
+                            <p>{steps[current].content}</p>
                             <MoveFocusInside>
                                 <div className={classes.navigation}>
-                                    <Button focusRipple={false} disabled={currentStepNumber === 0} onClick={() =>next(currentStepNumber - 1)}>Previus</Button>
+                                    <Button focusRipple={false} disabled={current === 0} onClick={() =>next(current - 1)}>Previus</Button>
                                     <div>
-                                        {steps.map((_, index) => <Dot key={index} actived={index === currentStepNumber} onClick={() => next(index)} />)}
+                                        {steps.map((_, index) => <Dot key={index} actived={index === current} onClick={() => next(index)} />)}
                                     </div>
-                                    <Button focusRipple={false} data-autofocus onClick={() =>next(currentStepNumber + 1)}>{currentStepNumber === steps.length - 1 ? "Finish" : "Next" }</Button>
+                                    <Button focusRipple={false} data-autofocus onClick={() =>next(current + 1)}>{current === steps.length - 1 ? "Finish" : "Next" }</Button>
                                 </div>
                             </MoveFocusInside>
                         </Popover>

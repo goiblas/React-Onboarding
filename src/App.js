@@ -59,14 +59,20 @@ const steps = [{
     selector: '[data-onboarding-step="1"]',
     title: "Title step 1",
     content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    onBefore: async () => console.log("step 1: Before"),
+    onAfter: async () => console.log("step 1: After")
   }, {
     selector: '[data-onboarding-step="2"]',
     title: "Title step 2",
     content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    onBefore: async () => console.log("step 2: Before"),
+    onAfter: async () => console.log("step 2: After")
   }, {
     selector: '[data-onboarding-step="3"]',
     title: "Title step 3",
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    onBefore: async () => console.log("step 3: Before"),
+    onAfter: async () => console.log("step 3: After")
   }
 ]
 
