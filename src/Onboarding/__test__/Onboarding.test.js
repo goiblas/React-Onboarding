@@ -26,6 +26,7 @@ describe('onBoarding', () => {
             selector: ".selector-2",
             title: "Title 2",
             content: "content 2",
+            placement: "left",
             onBefore: mockLastOnBefore,
             onAfter: mockLastOnAfter 
         }]
@@ -38,7 +39,7 @@ describe('onBoarding', () => {
 
         expect(mockOnBefore).toHaveBeenCalled()
         expect(utilsDom.scrollIntoView).toHaveBeenCalledWith(".selector");
-        expect(utilsDom.getCoords).toHaveBeenCalledWith(".selector");
+        expect(utilsDom.getCoords).toHaveBeenCalledWith(".selector", { placement: undefined });
 
         userEvent.click(screen.getByRole('button', { name: 'Next' }))
         
@@ -47,7 +48,9 @@ describe('onBoarding', () => {
     
         expect(mockOnAfter).toHaveBeenCalled()
         expect(mockLastOnBefore).toHaveBeenCalled()
-        
+        expect(utilsDom.scrollIntoView).toHaveBeenCalledWith(".selector-2");
+        expect(utilsDom.getCoords).toHaveBeenCalledWith(".selector-2", { placement: "left" });
+
         userEvent.click(screen.getByRole('button', { name: 'Finish' }))
         
         expect( await screen.findByText("Title 1") ).toBeInTheDocument()

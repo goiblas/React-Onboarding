@@ -25,7 +25,7 @@ describe('getCoords', () => {
 
     test('Should get left side coodinates of a element', () => {
         const options = {
-            position: "left",
+            placement: "left",
             gap: 50
         }
         const result = getCoords("p", options)

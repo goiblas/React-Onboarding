@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useLayoutEffect, useRef, useEffect } from "react"
+import React, { useState, useCallback, useRef, useEffect } from "react"
 import FocusLock, { MoveFocusInside } from 'react-focus-lock'
 import { Backdrop, Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
@@ -67,7 +67,7 @@ const Onboarding = ({ open, steps, onCompleted }) => {
                await step.onBefore()
             }
             await scrollIntoView(step.selector)
-            setPosition(getCoords(step.selector, { position: step.placement}))
+            setPosition(getCoords(step.selector, { placement: step.placement}))
 
             setMoving(false) 
         } 
@@ -90,7 +90,7 @@ const Onboarding = ({ open, steps, onCompleted }) => {
             setMoving(true)
     
             scrollIntoView(step.selector).then(() => {
-                setPosition(getCoords(step.selector, { position: step.placement}))
+                setPosition(getCoords(step.selector, { placement: step.placement}))
                 setMoving(false) 
             })
         }
