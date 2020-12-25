@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 
-function Portal({ children }) {
+const Portal = ({ children }) => {
   let ref = useRef(null)
 
   if (ref.current === null) {

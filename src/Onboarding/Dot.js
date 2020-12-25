@@ -1,5 +1,6 @@
 import React from "react"
-import { makeStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types'
+import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(theme => ({
         button: {
@@ -25,6 +26,15 @@ const useStyles = makeStyles(theme => ({
 const Dot = ({ actived, onClick, label }) => {
     const classes = useStyles({actived});
     return <button aria-label={label} className={classes.button} onClick={onClick}><span className={classes.dot}></span></button>
+}
+
+Dot.propTypes = {
+    actived: PropTypes.bool.isRequired,
+    onClick: PropTypes.func.isRequired,
+    label: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number
+    ]).isRequired
 }
 
 export default Dot

@@ -1,5 +1,6 @@
 import React from "react"
-import { makeStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types'
+import { makeStyles } from '@material-ui/core/styles'
 
 const fullRounded = "9999em"
 const duration = 1600;
@@ -50,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
         }
 }))
 
-const Badge = React.forwardRef(({ size = 14 } = {}, ref) => {
+const Badge = React.forwardRef(({ size = 14 }, ref) => {
     const classes = useStyles({ size })
     return (
         <div ref={ref} className={classes.wrapper}>
@@ -61,4 +62,7 @@ const Badge = React.forwardRef(({ size = 14 } = {}, ref) => {
     )
 })
 
+Badge.propTypes = {
+    size: PropTypes.number
+}
 export default Badge

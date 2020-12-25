@@ -1,6 +1,7 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Popper from '@material-ui/core/Popper';
+import React, { useState } from 'react'
+import PropTypes from 'prop-types'
+import { makeStyles } from '@material-ui/core/styles'
+import Popper from '@material-ui/core/Popper'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -44,9 +45,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default React.forwardRef( ({ anchorEl, children }, ref) => {
-  const classes = useStyles();
-  const [arrowRef, setArrowRef] = React.useState(null);
+const Popover = React.forwardRef( ({ anchorEl, children }, ref) => {
+  const classes = useStyles()
+  const [arrowRef, setArrowRef] = useState(null)
 
   return (
     <>
@@ -77,5 +78,16 @@ export default React.forwardRef( ({ anchorEl, children }, ref) => {
         <span className={classes.arrow} ref={setArrowRef} /> 
       </Popper>
       </>
-  );
+  )
 })
+
+
+Popover.propTypes = {
+  anchorEl: PropTypes.exact({
+    clientWidth: PropTypes.number.isRequired,
+    clientHeight: PropTypes.number.isRequired,
+    getBoundingClientRect: PropTypes.func.isRequired
+  })
+}
+
+export default Popover

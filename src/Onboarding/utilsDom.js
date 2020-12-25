@@ -1,4 +1,4 @@
-import scrollIntoViewIfNeeded from 'smooth-scroll-into-view-if-needed';
+import scrollIntoViewIfNeeded from 'smooth-scroll-into-view-if-needed'
 
 export function getCoords(selector, { gap = 32, placement = "right" } = {}) {
     const element = document.querySelector(selector)
