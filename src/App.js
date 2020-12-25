@@ -153,8 +153,9 @@ function Dashboard(props) {
 
 
   return (
-    <div className={classes.root}>
+    <>
       <Onboarding open={onboardingOpen} steps={steps} onCompleted={() => setOnboardingOpen(false)} />
+    <div className={classes.root}>
       <CssBaseline /> 
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
@@ -238,6 +239,7 @@ function Dashboard(props) {
         
       </main>
     </div>
+    </>
   );
 }
 
