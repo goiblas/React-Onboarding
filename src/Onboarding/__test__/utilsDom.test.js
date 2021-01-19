@@ -6,7 +6,7 @@ describe('getCoords', () => {
 
     beforeEach(() => {
         jest.restoreAllMocks()
-        jest.spyOn(document, 'querySelector').mockImplementation((selector) => {
+        jest.spyOn(document, 'querySelector').mockImplementation((_selector) => {
             return  { 
                 getBoundingClientRect: jest.fn().mockReturnValueOnce(element) 
             }

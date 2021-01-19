@@ -1,13 +1,12 @@
-import React, { useState, useCallback, useRef, useEffect } from "react"
+import React, { useState, useCallback, useRef, useEffect, useLayoutEffect } from "react"
 import PropTypes from 'prop-types'
 import FocusLock, { MoveFocusInside } from 'react-focus-lock'
 import { Backdrop, Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import { useDebouncedCallback } from 'use-debounce'
 import { enableScroll, disableScroll } from "./scrollLock"
 import Portal from "./Portal"
 import Badge from "./Badge"
-import { getCoords, scrollIntoView } from "./utilsDom"
+import { getCoords } from "./utilsDom"
 import Popover from "./Popover"
 import Dot from "./Dot"
 
@@ -34,7 +33,7 @@ const createAnchorEl = ({ x, y }) => ({
     }                      
 })
 
-const Onboarding = ({ open, steps, onCompleted }) => {
+const Onboarding = ({ open, steps, onCompleted, next: nextText, previus: previusText, finish: finishText  }) => {
     const classes = useStyles();
     const [current, _setCurrent] = useState(0)
     const [position, setPosition] = useState(null)
@@ -59,16 +58,16 @@ const Onboarding = ({ open, steps, onCompleted }) => {
             enableScroll()
         }
     }, [open])
-
-    useEffect(() => {
+    
+    useLayoutEffect(() => {
         async function loadNext() {
             setMoving(true)
             const step = steps[current]
             if(step.onBefore) {
                await step.onBefore()
             }
-            await scrollIntoView(step.selector)
-            setPosition(getCoords(step.selector, { placement: step.placement}))
+            const coords = getCoords(step.selector, { placement: step.placement})
+            setPosition(coords)
 
             setMoving(false) 
         } 
@@ -84,36 +83,13 @@ const Onboarding = ({ open, steps, onCompleted }) => {
         }
     }, [steps, setCurrent, onCompleted])
 
-    const resizeDebounced = useDebouncedCallback(() =>{ 
-        if(open && !isMoving) {
-            const step = steps[current]
-            
-            setMoving(true)
-    
-            scrollIntoView(step.selector).then(() => {
-                setPosition(getCoords(step.selector, { placement: step.placement}))
-                setMoving(false) 
-            })
-        }
-    }, 200)
-
-    useEffect(() => {
-        window.addEventListener("resize", resizeDebounced.callback)
-        
-        return () => {
-            window.removeEventListener("resize", resizeDebounced.callback)
-        }
-    }, [resizeDebounced.callback])
-
-    const handleClose = (ev) =>  ev.stopPropagation()  
-
     if(!open) {
         return null
     }
 
     return (
         <Portal>
-            <Backdrop className={classes.backdrop} open={true} onClick={handleClose}>
+            <Backdrop className={classes.backdrop} open={true} onClick={(ev) => ev.stopPropagation()}>
                 {!isMoving && position && (
                 <FocusLock shards={[popperRef]}>
                     <div style={{ position: "absolute", top: position.y, left: position.x }}> 
@@ -125,11 +101,11 @@ const Onboarding = ({ open, steps, onCompleted }) => {
                             <p>{steps[current].content}</p>
                             <MoveFocusInside>
                                 <div className={classes.navigation}>
-                                    <Button focusRipple={false} disabled={current === 0} onClick={() =>next(current - 1)}>Previus</Button>
+                                    <Button focusRipple={false} disabled={current === 0} onClick={() =>next(current - 1)}>{previusText}</Button>
                                     <div>
                                         {steps.map((_, index) => <Dot key={index} label={index + 1} actived={index === current} onClick={() => next(index)} />)}
                                     </div>
-                                    <Button focusRipple={false} data-autofocus onClick={() =>next(current + 1)}>{current === steps.length - 1 ? "Finish" : "Next" }</Button>
+                                    <Button focusRipple={false} data-autofocus onClick={() =>next(current + 1)}>{current === steps.length - 1 ? finishText : nextText }</Button>
                                 </div>
                             </MoveFocusInside>
                         </Popover>
@@ -154,12 +130,27 @@ Onboarding.propTypes = {
         onAfter: PropTypes.func,
         onBefore: PropTypes.func
         ,
-      })).isRequired
+      })).isRequired,
+      next: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.node,
+      ]),
+      finish: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.node,
+      ]),
+      previus: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.node,
+      ]),
 }
 
 Onboarding.defaultProps = {
     open: false,
-    onCompleted: () => {}
+    onCompleted: () => {},
+    finish: "Finish",
+    previus: "Previus",
+    next: "Next"
 }
 
 export default Onboarding

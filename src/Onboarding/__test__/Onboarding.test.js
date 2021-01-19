@@ -13,7 +13,27 @@ describe('onBoarding', () => {
         jest.spyOn(scrollLock, 'disableScroll').mockReturnValue({x: 0, y: 0})
 
         jest.spyOn(utilsDom, 'getCoords').mockReturnValue({x: 0, y: 0})
-        jest.spyOn(utilsDom, 'scrollIntoView').mockResolvedValue(undefined)
+    });
+
+    test('Translation ready', async () => {
+        const steps = [{
+            selector: ".selector",
+            title: "Title 1",
+            content: "content 1"
+        }, {
+            selector: ".selector",
+            title: "Title 2",
+            content: "content 2"
+        }];
+
+        render(<Onboarding next="Siguiente" previus="Anterior" finish="Finalizar" open={true} steps={steps} onCompleted={jest.fn()} />)
+
+        expect( await screen.findByText("Anterior") ).toBeInTheDocument()
+        userEvent.click(screen.getByRole('button', { name: 'Siguiente' }))
+
+        
+        expect( await screen.findByText("Finalizar") ).toBeInTheDocument()
+
     });
 
     test('Should disable scroll when it is opened', async () => {
@@ -83,7 +103,6 @@ describe('onBoarding', () => {
         expect( await screen.findByText("content 1") ).toBeInTheDocument()
 
         expect(mockOnBefore).toHaveBeenCalled()
-        expect(utilsDom.scrollIntoView).toHaveBeenCalledWith(".selector");
         expect(utilsDom.getCoords).toHaveBeenCalledWith(".selector", { placement: undefined });
 
         userEvent.click(screen.getByRole('button', { name: 'Next' }))
@@ -93,7 +112,6 @@ describe('onBoarding', () => {
     
         expect(mockOnAfter).toHaveBeenCalled()
         expect(mockLastOnBefore).toHaveBeenCalled()
-        expect(utilsDom.scrollIntoView).toHaveBeenCalledWith(".selector-2");
         expect(utilsDom.getCoords).toHaveBeenCalledWith(".selector-2", { placement: "left" });
 
         userEvent.click(screen.getByRole('button', { name: 'Finish' }))

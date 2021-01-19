@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles'
 const fullRounded = "9999em"
 const duration = 1600;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
         "@keyframes ripple": {
             "0%": {
                 boxShadow: "inset 0 0 0 14px #8fc7eb"
